@@ -37,6 +37,8 @@ if interface.has_summary_json() and not ALWAYS_REBUILD_SUMMARY:
     print('Re-using existing summary JSON')
     interface.read_summary_json()
 else:
+    print("CURRENT DIR: ")
+    print(os.getcwd())
     print('Creating summary JSON ...')
     interface.create_summary_json()
 
