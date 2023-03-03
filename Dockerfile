@@ -4,18 +4,19 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get install -y libspatialindex-dev unar bc python3-pip wget libgdal-dev
 
+ENV MNT_DIR /code/data
+
 ENV APP_HOME /code
 WORKDIR $APP_HOME
 COPY . ./
 
 RUN pip install -r requirements.txt
 
-RUN chmod +x ./entrypoint.sh
-RUN ./entrypoint.sh
+RUN chmod +x /code/gcsfuse_run.sh
 
-RUN dir -s
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
-CMD python3 server.py
+CMD ["/code/gcsfuse_run.sh"]
 
 EXPOSE 8080
 
