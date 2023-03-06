@@ -1,23 +1,17 @@
 FROM osgeo/gdal:ubuntu-small-latest-amd64
-ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
-RUN apt-get install -y libspatialindex-dev unar bc python3-pip wget libgdal-dev
+RUN apt-get install -y libspatialindex-dev unar bc python3-pip wget
 
-ENV MNT_DIR /code/data
-
-ENV APP_HOME /code
-WORKDIR $APP_HOME
-COPY . ./
-
+ADD ./requirements.txt .
 RUN pip install -r requirements.txt
 
-RUN chmod +x /code/gcsfuse_run.sh
+RUN mkdir /code
+ADD . /code/
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
-
-CMD ["/code/gcsfuse_run.sh"]
+WORKDIR /code
+CMD python3 server.py
 
 EXPOSE 8080
 
-EXPOSE 8043
+EXPOSE 8443
